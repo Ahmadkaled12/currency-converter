@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<title>Admin Test</title>
 
 <style>
 body{
@@ -12,35 +12,27 @@ color:white;
 display:flex;
 justify-content:center;
 align-items:center;
-min-height:100vh;
+height:100vh;
 margin:0;
 }
 
 .box{
-width:90%;
-max-width:400px;
-background:rgba(255,255,255,0.08);
+background:rgba(255,255,255,0.1);
 padding:20px;
 border-radius:15px;
-backdrop-filter:blur(15px);
+width:300px;
+text-align:center;
 }
 
-input,textarea,button{
+input,button{
 width:100%;
-padding:12px;
+padding:10px;
 margin-top:10px;
 border:none;
-border-radius:10px;
-font-size:16px;
+border-radius:8px;
 }
 
-button{
-background:#22c55e;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
-
+button{background:#22c55e;color:white;}
 .hidden{display:none;}
 </style>
 </head>
@@ -49,50 +41,29 @@ cursor:pointer;
 
 <div class="box">
 
-<!-- LOGIN -->
-<div id="loginBox">
-<h2>Admin Login</h2>
+<div id="login">
+<h3>Login</h3>
 <input id="pass" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+<button onclick="login()">Enter</button>
 </div>
 
-<!-- PANEL -->
 <div id="panel" class="hidden">
-<h2>Control Panel</h2>
-
-<input id="usd" placeholder="USD → SYP">
-<input id="try" placeholder="USD → TRY">
-<textarea id="ads" placeholder="Advertisement"></textarea>
-
-<button onclick="save()">Save</button>
+<h3>SUCCESS ✅</h3>
+<p>Admin panel is working</p>
 </div>
 
 </div>
 
 <script>
-const ADMIN_PASSWORD = "12345";
-
 function login(){
-let pass = document.getElementById("pass").value;
+let p = document.getElementById("pass").value;
 
-if(pass === ADMIN_PASSWORD){
-document.getElementById("loginBox").style.display = "none";
+if(p === "12345"){
+document.getElementById("login").style.display = "none";
 document.getElementById("panel").style.display = "block";
 }else{
 alert("Wrong password");
 }
-}
-
-function save(){
-alert("Saved (Firebase not connected check config)");
-}
-</script>
-
-</body>
-</html>ads:document.getElementById("ads").value
-});
-
-alert("Saved!");
 }
 </script>
 
