@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +8,8 @@
 <style>
 body{
 margin:0;
-font-family: 'Segoe UI', Tahoma, sans-serif;
-background: linear-gradient(135deg,#0b1220,#1e1b4b,#0f172a);
+font-family: "Segoe UI", Tahoma, sans-serif;
+background: linear-gradient(135deg,#0a0f1f,#1e1b4b,#0f172a);
 display:flex;
 justify-content:center;
 align-items:center;
@@ -22,43 +22,44 @@ color:white;
 width:90%;
 max-width:420px;
 background: rgba(255,255,255,0.08);
-backdrop-filter: blur(20px);
-padding:24px;
-border-radius:28px;
+backdrop-filter: blur(22px);
+padding:26px;
+border-radius:32px;
 border:1px solid rgba(255,255,255,0.15);
-box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+box-shadow: 0 20px 50px rgba(0,0,0,0.45);
 animation: fadeIn 0.6s ease;
 }
 
 @keyframes fadeIn{
-from{opacity:0; transform:translateY(15px);}
+from{opacity:0; transform:translateY(20px);}
 to{opacity:1; transform:translateY(0);}
 }
 
 /* LOGO */
 .logo{
 text-align:center;
-font-size:28px;
-font-weight:800;
+font-size:30px;
+font-weight:900;
 margin-bottom:10px;
 color:#38bdf8;
-text-shadow:0 0 15px rgba(56,189,248,0.4);
+text-shadow:0 0 18px rgba(56,189,248,0.5);
 }
 
 /* TITLE */
 h2{
 text-align:center;
-margin-bottom:15px;
+margin-bottom:18px;
 color:#facc15;
+letter-spacing:1px;
 }
 
 /* INPUTS */
 input,select{
 width:100%;
-padding:13px;
+padding:14px;
 margin-top:10px;
 border:none;
-border-radius:18px;
+border-radius:20px;
 font-size:16px;
 outline:none;
 background:#f8fafc;
@@ -66,17 +67,17 @@ transition:0.3s;
 }
 
 input:focus,select:focus{
-box-shadow:0 0 10px rgba(56,189,248,0.5);
-transform:scale(1.02);
+box-shadow:0 0 14px rgba(56,189,248,0.6);
+transform:scale(1.03);
 }
 
 /* BUTTONS */
 button{
 width:100%;
-padding:13px;
+padding:14px;
 margin-top:10px;
 border:none;
-border-radius:22px;
+border-radius:26px;
 font-size:16px;
 font-weight:bold;
 cursor:pointer;
@@ -85,62 +86,65 @@ position:relative;
 overflow:hidden;
 }
 
-/* hover shine */
+/* shine effect */
 button::before{
 content:"";
 position:absolute;
 top:0;
-left:-100%;
-width:100%;
+left:-120%;
+width:120%;
 height:100%;
-background:linear-gradient(120deg,transparent,rgba(255,255,255,0.3),transparent);
-transition:0.5s;
+background:linear-gradient(120deg,transparent,rgba(255,255,255,0.35),transparent);
+transition:0.6s;
 }
 
 button:hover::before{
-left:100%;
+left:120%;
 }
 
 button:hover{
-transform:translateY(-2px);
+transform:translateY(-3px);
 }
 
 /* COLORS */
 .swap{
-background:linear-gradient(135deg,#f97316,#fb7185);
-box-shadow:0 0 15px rgba(249,115,22,0.4);
+background: linear-gradient(135deg,#ff6a00,#ff3c5f);
+box-shadow:0 0 18px rgba(255,90,50,0.4);
 color:white;
 }
 
 .convert{
-background:linear-gradient(135deg,#22c55e,#16a34a);
-box-shadow:0 0 15px rgba(34,197,94,0.4);
+background: linear-gradient(135deg,#00c853,#009624);
+box-shadow:0 0 18px rgba(0,200,83,0.4);
 color:white;
 }
 
 /* RESULT */
 #result{
 margin-top:16px;
-padding:16px;
-border-radius:18px;
-background:rgba(0,0,0,0.25);
+padding:18px;
+border-radius:22px;
+background: rgba(0,0,0,0.25);
 text-align:center;
-font-size:20px;
+font-size:22px;
 font-weight:bold;
+letter-spacing:1px;
 }
 
 /* ADS PREMIUM */
 .ads-container{
-margin-top:18px;
-padding:14px;
-border-radius:20px;
-background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(37,99,235,0.25));
-border:1px solid rgba(255,255,255,0.15);
-backdrop-filter:blur(15px);
+margin-top:20px;
+padding:15px;
+border-radius:22px;
+background: linear-gradient(135deg,rgba(124,58,237,0.25),rgba(37,99,235,0.25));
+border:1px solid rgba(255,255,255,0.18);
+backdrop-filter: blur(18px);
 position:relative;
 overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
+/* soft glow */
 .ads-container::after{
 content:"";
 position:absolute;
@@ -148,8 +152,8 @@ top:-50%;
 left:-50%;
 width:200%;
 height:200%;
-background:radial-gradient(circle,rgba(255,255,255,0.08),transparent 60%);
-animation: glow 6s linear infinite;
+background: radial-gradient(circle,rgba(255,255,255,0.08),transparent 60%);
+animation: glow 7s linear infinite;
 }
 
 @keyframes glow{
@@ -157,6 +161,7 @@ from{transform:rotate(0deg);}
 to{transform:rotate(360deg);}
 }
 
+/* HEADER */
 .ads-header{
 text-align:center;
 font-size:12px;
@@ -164,12 +169,14 @@ font-weight:bold;
 color:#facc15;
 letter-spacing:2px;
 margin-bottom:10px;
+text-shadow:0 0 10px rgba(250,204,21,0.4);
 }
 
+/* MOVING TEXT */
 .ads-frame{
 overflow:hidden;
 white-space:nowrap;
-height:26px;
+height:28px;
 display:flex;
 align-items:center;
 }
@@ -180,8 +187,8 @@ padding-left:100%;
 font-size:15px;
 font-weight:600;
 color:#ffffff;
-animation:scrollText 10s linear infinite;
-text-shadow:0 0 10px rgba(255,255,255,0.3);
+animation:scrollText 11s linear infinite;
+text-shadow:0 0 10px rgba(255,255,255,0.25);
 }
 
 @keyframes scrollText{
@@ -195,7 +202,7 @@ text-shadow:0 0 10px rgba(255,255,255,0.3);
 
 <div class="container">
 
-<div class="logo">مساعدة لتحويل العملة 💱</div>
+<div class="logo">💱 UMEI Exchange</div>
 
 <h2>محول العملات</h2>
 
@@ -213,16 +220,16 @@ text-shadow:0 0 10px rgba(255,255,255,0.3);
 <option value="TRY">ليرة تركية</option>
 </select>
 
-<button class="swap" onclick="swap()">تبديل</button>
+<button class="swap" onclick="swap()">تبديل العملات</button>
 <button class="convert" onclick="convert()">تحويل</button>
 
 <div id="result">0.00</div>
 
 <!-- ADS -->
 <div class="ads-container">
-  <div class="ads-header">📢 LIVE ANNOUNCEMENTS</div>
+  <div class="ads-header">📢 الإعلانات</div>
   <div class="ads-frame">
-    <div class="ads-text" id="adsBox">Loading announcements...</div>
+    <div class="ads-text" id="adsBox">جاري تحميل الإعلانات...</div>
   </div>
 </div>
 
@@ -250,7 +257,7 @@ const snap = await getDoc(doc(db,"settings","rates"));
 if(snap.exists()){
 rates = snap.data();
 document.getElementById("adsBox").innerText =
-rates.ads || "لا يوجد إعلان";
+rates.ads || "لا يوجد إعلان حالياً";
 }
 }
 
