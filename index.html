@@ -37,35 +37,18 @@ margin-bottom:8px;
 }
 
 /* boxes */
-.rate-box{
+.rate-box,.gold-box,.visitor-box{
 background:rgba(0,0,0,0.25);
 padding:10px;
 border-radius:14px;
 text-align:center;
 margin-bottom:10px;
 font-weight:bold;
-color:#facc15;
 }
 
-.gold-box{
-background:rgba(0,0,0,0.25);
-padding:10px;
-border-radius:14px;
-text-align:center;
-margin-bottom:10px;
-font-weight:bold;
-color:#f59e0b;
-}
-
-.visitor-box{
-background:rgba(0,0,0,0.25);
-padding:10px;
-border-radius:14px;
-text-align:center;
-margin-bottom:12px;
-font-weight:bold;
-color:#22c55e;
-}
+.rate-box{color:#facc15;}
+.gold-box{color:#f59e0b;}
+.visitor-box{color:#22c55e;}
 
 input,select{
 width:100%;
@@ -102,6 +85,7 @@ font-size:20px;
 font-weight:bold;
 }
 
+/* ADS */
 .ads-container{
 margin-top:16px;
 padding:14px;
@@ -122,6 +106,38 @@ font-weight:bold;
 @keyframes move{
 0%{transform:translateX(0);}
 100%{transform:translateX(-100%);}
+}
+
+/* 🔥 CONTACT BUTTONS */
+.contact-box{
+margin-top:14px;
+display:grid;
+gap:10px;
+}
+
+.contact-box a{
+display:block;
+text-align:center;
+padding:14px;
+border-radius:22px;
+text-decoration:none;
+color:white;
+font-weight:bold;
+transition:0.3s;
+}
+
+.whatsapp{
+background:linear-gradient(135deg,#25D366,#128C7E);
+box-shadow:0 0 15px rgba(37,211,102,0.4);
+}
+
+.support{
+background:linear-gradient(135deg,#0ea5e9,#2563eb);
+box-shadow:0 0 15px rgba(59,130,246,0.4);
+}
+
+.contact-box a:hover{
+transform:scale(1.03);
 }
 </style>
 </head>
@@ -159,6 +175,19 @@ font-weight:bold;
 <button class="convert" onclick="convert()">تحويل</button>
 
 <div id="result">0.00</div>
+
+<!-- 🔥 أزرار التواصل -->
+<div class="contact-box">
+
+  <a href="https://wa.me/qr/H572VSVRB364A1" target="_blank" class="whatsapp">
+    📱 تواصل عبر واتساب
+  </a>
+
+  <a href="https://wa.me/qr/H572VSVRB364A1" target="_blank" class="support">
+    💬 دعم مباشر
+  </a>
+
+</div>
 
 <!-- 📢 الإعلانات -->
 <div class="ads-container">
