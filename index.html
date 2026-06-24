@@ -36,12 +36,13 @@ color:#38bdf8;
 margin-bottom:8px;
 }
 
+/* boxes */
 .rate-box{
 background:rgba(0,0,0,0.25);
 padding:10px;
 border-radius:14px;
 text-align:center;
-margin-bottom:12px;
+margin-bottom:10px;
 font-weight:bold;
 color:#facc15;
 }
@@ -51,10 +52,19 @@ background:rgba(0,0,0,0.25);
 padding:10px;
 border-radius:14px;
 text-align:center;
-margin-bottom:12px;
+margin-bottom:10px;
 font-weight:bold;
 color:#f59e0b;
-line-height:1.6;
+}
+
+.visitor-box{
+background:rgba(0,0,0,0.25);
+padding:10px;
+border-radius:14px;
+text-align:center;
+margin-bottom:12px;
+font-weight:bold;
+color:#22c55e;
 }
 
 input,select{
@@ -97,7 +107,6 @@ margin-top:16px;
 padding:14px;
 border-radius:18px;
 background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(37,99,235,0.25));
-border:1px solid rgba(255,255,255,0.18);
 text-align:center;
 overflow:hidden;
 }
@@ -123,10 +132,13 @@ font-weight:bold;
 
 <div class="logo">💱 محول العملات والذهب</div>
 
-<!-- العملات -->
+<!-- 👥 الزوار -->
+<div class="visitor-box" id="visitorBox">جاري تحميل عدد الزوار...</div>
+
+<!-- 💱 العملات -->
 <div class="rate-box" id="rateBox">جاري تحميل أسعار العملات...</div>
 
-<!-- الذهب -->
+<!-- 🪙 الذهب -->
 <div class="gold-box" id="goldBox">جاري تحميل أسعار الذهب...</div>
 
 <input id="amount" type="number" placeholder="أدخل المبلغ">
@@ -143,12 +155,12 @@ font-weight:bold;
 <option value="TRY">ليرة تركية</option>
 </select>
 
-<button class="swap" onclick="swap()">تبديل العملات</button>
+<button class="swap" onclick="swap()">تبديل</button>
 <button class="convert" onclick="convert()">تحويل</button>
 
 <div id="result">0.00</div>
 
-<!-- الإعلانات -->
+<!-- 📢 الإعلانات -->
 <div class="ads-container">
 <div class="ads-text" id="adsBox">جاري تحميل الإعلانات...</div>
 </div>
@@ -157,7 +169,7 @@ font-weight:bold;
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyCVJClfpEp9Jo9879C3RfZKiEdBUibwrx",
@@ -170,7 +182,7 @@ const db = getFirestore(app);
 
 let rates = { USD:1 };
 
-// العملات
+// 💱 العملات
 async function loadRates(){
 try{
 const res = await fetch("https://open.er-api.com/v6/latest/USD");
@@ -183,50 +195,60 @@ TRY:data.rates.TRY
 };
 
 document.getElementById("rateBox").innerText =
-`سعر الدولار مقابل الليرة السورية: ${rates.SYP} | سعر الدولار مقابل الليرة التركية: ${rates.TRY}`;
+`الدولار = ${rates.SYP} ليرة سورية | ${rates.TRY} ليرة تركية`;
 
-}catch(e){
+}catch{
 document.getElementById("rateBox").innerText =
 "فشل تحميل أسعار العملات";
 }
 }
 
-// الذهب
+// 🪙 الذهب
 async function loadGold(){
 try{
 const res = await fetch("https://api.gold-api.com/price/XAU");
 const data = await res.json();
 
-let price = data.price || 0;
-
 document.getElementById("goldBox").innerText =
-`سعر الذهب العالمي: $${price} للأونصة`;
+`سعر الذهب: $${data.price} للأونصة`;
 
-}catch(e){
+}catch{
 document.getElementById("goldBox").innerText =
 "فشل تحميل أسعار الذهب";
 }
 }
 
-// الإعلانات
+// 📢 الإعلانات
 async function loadAds(){
 const snap = await getDoc(doc(db,"settings","rates"));
 if(snap.exists()){
 document.getElementById("adsBox").innerText =
-snap.data().ads || "لا توجد إعلانات حالياً";
+snap.data().ads || "لا توجد إعلانات";
 }
 }
 
-// التحويل
+// 👥 الزوار
+const visitorRef = doc(db,"stats","visitors");
+
+async function addVisitor(){
+await setDoc(visitorRef,{count:increment(1)},{merge:true});
+}
+
+async function loadVisitors(){
+const snap = await getDoc(visitorRef);
+let count = snap.exists() ? snap.data().count : 0;
+
+document.getElementById("visitorBox").innerText =
+`👥 عدد الزوار: ${count}`;
+}
+
+// 🔄 تحويل
 window.convert = function(){
 let amount = Number(document.getElementById("amount").value);
 let from = document.getElementById("from").value;
 let to = document.getElementById("to").value;
 
-if(!amount){
-alert("يرجى إدخال المبلغ");
-return;
-}
+if(!amount) return alert("أدخل المبلغ");
 
 let usd = amount / rates[from];
 let result = usd * rates[to];
@@ -235,24 +257,26 @@ document.getElementById("result").innerText =
 result.toFixed(2) + " " + to;
 }
 
-// التبديل
+// 🔁 تبديل
 window.swap = function(){
 let f = document.getElementById("from");
 let t = document.getElementById("to");
 [f.value,t.value]=[t.value,f.value];
 }
 
-// تشغيل
+// 🚀 تشغيل
 async function init(){
 await loadRates();
 await loadGold();
 await loadAds();
+await addVisitor();
+await loadVisitors();
 }
 
 init();
 setInterval(loadRates,60000);
 setInterval(loadGold,60000);
-setInterval(loadAds,5000);
+setInterval(loadVisitors,5000);
 </script>
 
 </body>
