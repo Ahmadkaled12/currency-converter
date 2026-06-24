@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Test</title>
+<title>Admin Panel</title>
 
 <style>
 body{
@@ -12,28 +12,41 @@ color:white;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+min-height:100vh;
 margin:0;
 }
 
 .box{
-background:rgba(255,255,255,0.1);
+width:90%;
+max-width:400px;
+background:rgba(255,255,255,0.08);
 padding:20px;
 border-radius:15px;
-width:300px;
-text-align:center;
+backdrop-filter:blur(15px);
 }
 
-input,button{
+input,textarea,button{
 width:100%;
-padding:10px;
+padding:12px;
 margin-top:10px;
 border:none;
-border-radius:8px;
+border-radius:10px;
+font-size:16px;
 }
 
-button{background:#22c55e;color:white;}
+button{
+background:#22c55e;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
 .hidden{display:none;}
+
+.title{
+text-align:center;
+margin-bottom:10px;
+}
 </style>
 </head>
 
@@ -41,28 +54,84 @@ button{background:#22c55e;color:white;}
 
 <div class="box">
 
-<div id="login">
-<h3>Login</h3>
-<input id="pass" type="password" placeholder="Password">
-<button onclick="login()">Enter</button>
+<!-- LOGIN -->
+<div id="loginBox">
+<h2 class="title">Admin Login</h2>
+<input id="pass" type="password" placeholder="Enter password">
+<button onclick="login()">Login</button>
 </div>
 
+<!-- PANEL -->
 <div id="panel" class="hidden">
-<h3>SUCCESS ✅</h3>
-<p>Admin panel is working</p>
-</div>
+
+<h2 class="title">Currency Control</h2>
+
+<input id="syp" placeholder="USD → SYP">
+<input id="try" placeholder="USD → TRY">
+
+<textarea id="ads" placeholder="Advertisement text"></textarea>
+
+<button onclick="save()">Save Changes</button>
 
 </div>
 
-<script>
-function login(){
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyCVJclfpEp9Jo9879C3RfZKiEdBUibwrxI",
+authDomain: "ahmad-662ee.firebaseapp.com",
+projectId: "ahmad-662ee",
+storageBucket: "ahmad-662ee.firebasestorage.app",
+messagingSenderId: "740891153734",
+appId: "1:740891153734:web:51e912a46aa35f6a618147"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 🔐 PASSWORD
+const ADMIN_PASSWORD = "12345";
+
+window.login = function(){
 let p = document.getElementById("pass").value;
 
-if(p === "12345"){
-document.getElementById("login").style.display = "none";
-document.getElementById("panel").style.display = "block";
+if(p === ADMIN_PASSWORD){
+document.getElementById("loginBox").style.display = "none";
+document.getElementById("panel").classList.remove("hidden");
+loadData();
 }else{
 alert("Wrong password");
+}
+}
+
+// 💾 SAVE DATA
+window.save = async function(){
+
+await setDoc(doc(db,"settings","rates"),{
+USD:1,
+SYP:Number(document.getElementById("syp").value),
+TRY:Number(document.getElementById("try").value),
+ads:document.getElementById("ads").value
+});
+
+alert("Saved successfully ✅");
+}
+
+// 📥 LOAD DATA
+async function loadData(){
+let snap = await getDoc(doc(db,"settings","rates"));
+
+if(snap.exists()){
+let d = snap.data();
+
+document.getElementById("syp").value = d.SYP;
+document.getElementById("try").value = d.TRY;
+document.getElementById("ads").value = d.ads;
 }
 }
 </script>
