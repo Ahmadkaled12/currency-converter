@@ -2,57 +2,113 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Control Panel</title>
 
 <style>
 body{
-font-family:Arial;
-background:#0f172a;
-color:white;
+margin:0;
+font-family: "Segoe UI", sans-serif;
+background: linear-gradient(135deg,#0b1220,#1e1b4b,#0f172a);
 display:flex;
 justify-content:center;
 align-items:center;
 min-height:100vh;
-margin:0;
+color:white;
 }
 
+/* CARD */
 .box{
-width:90%;
-max-width:420px;
-background:rgba(255,255,255,0.08);
-padding:25px;
-border-radius:15px;
-backdrop-filter:blur(15px);
+width:92%;
+max-width:450px;
+background: rgba(255,255,255,0.08);
+backdrop-filter: blur(22px);
+padding:26px;
+border-radius:24px;
+border:1px solid rgba(255,255,255,0.15);
+box-shadow:0 20px 60px rgba(0,0,0,0.4);
+animation:fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1; transform:translateY(0);}
 }
 
 h2{
 text-align:center;
-margin-bottom:10px;
+margin-bottom:15px;
+color:#facc15;
 }
 
-input,textarea,button{
+.status{
+text-align:center;
+font-size:12px;
+margin-bottom:10px;
+color:#38bdf8;
+}
+
+/* INPUTS */
+input,textarea{
 width:100%;
-padding:12px;
+padding:14px;
 margin-top:10px;
 border:none;
-border-radius:10px;
-font-size:16px;
+border-radius:14px;
+font-size:15px;
+outline:none;
+background:#f8fafc;
+transition:0.3s;
 }
 
+input:focus,textarea:focus{
+box-shadow:0 0 12px rgba(56,189,248,0.6);
+transform:scale(1.02);
+}
+
+/* BUTTON */
 button{
-background:#22c55e;
-color:white;
+width:100%;
+padding:14px;
+margin-top:12px;
+border:none;
+border-radius:18px;
+font-size:16px;
 font-weight:bold;
 cursor:pointer;
-transition:0.2s;
+background:linear-gradient(135deg,#22c55e,#16a34a);
+color:white;
+transition:0.3s;
+position:relative;
+overflow:hidden;
 }
 
 button:hover{
-transform:scale(1.03);
+transform:translateY(-2px);
 }
 
+/* LOGIN BOX */
 #panel{
 display:none;
+}
+
+/* PASSWORD BOX */
+.login{
+text-align:center;
+}
+
+/* INPUT GROUP */
+.group{
+margin-top:10px;
+padding:10px;
+border-radius:12px;
+background:rgba(0,0,0,0.25);
+}
+
+/* LABEL */
+label{
+font-size:12px;
+color:#94a3b8;
 }
 </style>
 </head>
@@ -62,40 +118,48 @@ display:none;
 <div class="box">
 
 <!-- LOGIN -->
-<div id="loginBox">
-<h2>Admin Login</h2>
-<input id="pass" type="password" placeholder="Enter password">
+<div id="loginBox" class="login">
+<h2>🔐 Admin Login</h2>
+<input id="pass" type="password" placeholder="Enter admin password">
 <button onclick="login()">Login</button>
 </div>
 
 <!-- PANEL -->
 <div id="panel">
 
-<h2>Currency Control</h2>
+<h2>💱 Currency Admin Panel</h2>
 
-<input id="syp" placeholder="USD → SYP">
-<input id="try" placeholder="USD → TRY">
+<div class="status" id="status">Checking Firebase...</div>
 
-<textarea id="ads" placeholder="Advertisement text"></textarea>
+<div class="group">
+<label>USD → SYP</label>
+<input id="syp" type="number" placeholder="Enter rate">
+</div>
 
-<button onclick="save()">Save Changes</button>
+<div class="group">
+<label>USD → TRY</label>
+<input id="try" type="number" placeholder="Enter rate">
+</div>
+
+<div class="group">
+<label>📢 Announcement Text</label>
+<textarea id="ads" placeholder="Write announcement..."></textarea>
+</div>
+
+<button id="saveBtn" onclick="save()">💾 Save Changes</button>
 
 </div>
 
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyCVJclfpEp9Jo9879C3RfZKiEdBUibwrxI",
+apiKey: "AIzaSyCVJClfpEp9Jo9879C3RfZKiEdBUibwrx",
 authDomain: "ahmad-662ee.firebaseapp.com",
-projectId: "ahmad-662ee",
-storageBucket: "ahmad-662ee.firebasestorage.app",
-messagingSenderId: "740891153734",
-appId: "1:740891153734:web:51e912a46aa35f6a618147"
+projectId: "ahmad-662ee"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -103,22 +167,34 @@ const db = getFirestore(app);
 
 const ADMIN_PASSWORD = "12345";
 
-// 🔐 LOGIN
+// STATUS
+function setStatus(msg,color="#38bdf8"){
+document.getElementById("status").innerText = msg;
+document.getElementById("status").style.color = color;
+}
+
+// LOGIN
 window.login = function(){
 let pass = document.getElementById("pass").value;
 
 if(pass === ADMIN_PASSWORD){
-document.getElementById("loginBox").style.display = "none";
-document.getElementById("panel").style.display = "block";
+document.getElementById("loginBox").style.display="none";
+document.getElementById("panel").style.display="block";
+setStatus("Loading data...");
 loadData();
 }else{
-alert("Wrong password");
+setStatus("Wrong password ❌","red");
 }
 }
 
-// 💾 SAVE DATA TO FIREBASE
+// SAVE
 window.save = async function(){
 
+let btn = document.getElementById("saveBtn");
+btn.innerText = "Saving...";
+btn.disabled = true;
+
+try{
 await setDoc(doc(db,"settings","rates"),{
 USD:1,
 SYP:Number(document.getElementById("syp").value),
@@ -126,10 +202,17 @@ TRY:Number(document.getElementById("try").value),
 ads:document.getElementById("ads").value
 });
 
-alert("Saved successfully ✅");
+setStatus("Saved successfully ✅","#22c55e");
+
+}catch(e){
+setStatus("Error saving data ❌","red");
 }
 
-// 📥 LOAD DATA FROM FIREBASE
+btn.innerText = "💾 Save Changes";
+btn.disabled = false;
+}
+
+// LOAD
 async function loadData(){
 let snap = await getDoc(doc(db,"settings","rates"));
 
@@ -139,6 +222,10 @@ let d = snap.data();
 document.getElementById("syp").value = d.SYP;
 document.getElementById("try").value = d.TRY;
 document.getElementById("ads").value = d.ads;
+
+setStatus("Connected to Firebase ✅","#22c55e");
+}else{
+setStatus("No data found ⚠️","orange");
 }
 }
 </script>
