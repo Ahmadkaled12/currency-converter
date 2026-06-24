@@ -50,7 +50,6 @@ h2{
 text-align:center;
 margin-bottom:18px;
 color:#facc15;
-letter-spacing:1px;
 }
 
 /* INPUTS */
@@ -86,7 +85,6 @@ position:relative;
 overflow:hidden;
 }
 
-/* shine effect */
 button::before{
 content:"";
 position:absolute;
@@ -131,7 +129,7 @@ font-weight:bold;
 letter-spacing:1px;
 }
 
-/* ADS PREMIUM */
+/* ADS */
 .ads-container{
 margin-top:20px;
 padding:15px;
@@ -144,7 +142,6 @@ overflow:hidden;
 box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
-/* soft glow */
 .ads-container::after{
 content:"";
 position:absolute;
@@ -161,7 +158,6 @@ from{transform:rotate(0deg);}
 to{transform:rotate(360deg);}
 }
 
-/* HEADER */
 .ads-header{
 text-align:center;
 font-size:12px;
@@ -172,7 +168,6 @@ margin-bottom:10px;
 text-shadow:0 0 10px rgba(250,204,21,0.4);
 }
 
-/* MOVING TEXT */
 .ads-frame{
 overflow:hidden;
 white-space:nowrap;
@@ -188,12 +183,6 @@ font-size:15px;
 font-weight:600;
 color:#ffffff;
 animation:scrollText 11s linear infinite;
-text-shadow:0 0 10px rgba(255,255,255,0.25);
-}
-
-@keyframes scrollText{
-0%{transform:translateX(0);}
-100%{transform:translateX(-100%);}
 }
 </style>
 </head>
@@ -225,7 +214,6 @@ text-shadow:0 0 10px rgba(255,255,255,0.25);
 
 <div id="result">0.00</div>
 
-<!-- ADS -->
 <div class="ads-container">
   <div class="ads-header">📢 الإعلانات</div>
   <div class="ads-frame">
@@ -241,7 +229,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyCVJClfpEp9Jo9879C3RfZKiEdBUibwrxI",
+apiKey: "AIzaSyCVJClfpEp9Jo9879C3RfZKiEdBUibwrx",
 authDomain: "ahmad-662ee.firebaseapp.com",
 projectId: "ahmad-662ee"
 };
@@ -249,15 +237,31 @@ projectId: "ahmad-662ee"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let rates = {};
+let rates = { USD: 1 };
 
-async function load(){
+// 🔥 جلب الإعلانات
+async function loadAds(){
 const snap = await getDoc(doc(db,"settings","rates"));
-
 if(snap.exists()){
-rates = snap.data();
 document.getElementById("adsBox").innerText =
-rates.ads || "لا يوجد إعلان حالياً";
+snap.data().ads || "لا يوجد إعلان حالياً";
+}
+}
+
+// 💱 جلب أسعار حقيقية تلقائياً
+async function loadRates(){
+try{
+const res = await fetch("https://open.er-api.com/v6/latest/USD");
+const data = await res.json();
+
+rates = {
+USD: 1,
+SYP: data.rates.SYP,
+TRY: data.rates.TRY
+};
+
+}catch(e){
+console.log("error loading rates");
 }
 }
 
@@ -284,8 +288,15 @@ let t = document.getElementById("to");
 [f.value,t.value]=[t.value,f.value];
 }
 
-load();
-setInterval(load,5000);
+async function init(){
+await loadRates();
+await loadAds();
+}
+
+init();
+
+setInterval(loadRates, 60000);
+setInterval(loadAds, 5000);
 </script>
 
 </body>
