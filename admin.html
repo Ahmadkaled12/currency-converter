@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Login</title>
+<title>Admin Panel</title>
 
 <style>
 body{
@@ -13,6 +13,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 min-height:100vh;
+margin:0;
 }
 
 .box{
@@ -24,12 +25,13 @@ border-radius:15px;
 backdrop-filter:blur(15px);
 }
 
-input,button{
+input,textarea,button{
 width:100%;
 padding:12px;
 margin-top:10px;
 border:none;
 border-radius:10px;
+font-size:16px;
 }
 
 button{
@@ -47,68 +49,47 @@ cursor:pointer;
 
 <div class="box">
 
+<!-- LOGIN -->
 <div id="loginBox">
 <h2>Admin Login</h2>
 <input id="pass" type="password" placeholder="Password">
 <button onclick="login()">Login</button>
 </div>
 
+<!-- PANEL -->
 <div id="panel" class="hidden">
-
 <h2>Control Panel</h2>
 
 <input id="usd" placeholder="USD → SYP">
 <input id="try" placeholder="USD → TRY">
 <textarea id="ads" placeholder="Advertisement"></textarea>
 
-<button onclick="save()">Save Changes</button>
-
+<button onclick="save()">Save</button>
 </div>
 
 </div>
-
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 
 <script>
-const firebaseConfig = {
-apiKey: "YOUR_KEY",
-authDomain: "YOUR_DOMAIN",
-projectId: "YOUR_ID"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-const ADMIN_PASSWORD = "1998"; // غيرها لاحقاً
+const ADMIN_PASSWORD = "12345";
 
 function login(){
-let p = document.getElementById("pass").value;
+let pass = document.getElementById("pass").value;
 
-if(p === ADMIN_PASSWORD){
-document.getElementById("loginBox").classList.add("hidden");
-document.getElementById("panel").classList.remove("hidden");
-loadData();
+if(pass === ADMIN_PASSWORD){
+document.getElementById("loginBox").style.display = "none";
+document.getElementById("panel").style.display = "block";
 }else{
 alert("Wrong password");
 }
 }
 
-async function loadData(){
-let doc = await db.collection("settings").doc("rates").get();
-let d = doc.data();
-
-document.getElementById("usd").value = d.SYP;
-document.getElementById("try").value = d.TRY;
-document.getElementById("ads").value = d.ads;
-}
-
 function save(){
-db.collection("settings").doc("rates").set({
-USD:1,
-SYP:Number(document.getElementById("usd").value),
-TRY:Number(document.getElementById("try").value),
-ads:document.getElementById("ads").value
+alert("Saved (Firebase not connected check config)");
+}
+</script>
+
+</body>
+</html>ads:document.getElementById("ads").value
 });
 
 alert("Saved!");
