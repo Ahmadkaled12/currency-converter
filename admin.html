@@ -18,11 +18,16 @@ margin:0;
 
 .box{
 width:90%;
-max-width:400px;
+max-width:420px;
 background:rgba(255,255,255,0.08);
-padding:20px;
+padding:25px;
 border-radius:15px;
 backdrop-filter:blur(15px);
+}
+
+h2{
+text-align:center;
+margin-bottom:10px;
 }
 
 input,textarea,button{
@@ -39,13 +44,15 @@ background:#22c55e;
 color:white;
 font-weight:bold;
 cursor:pointer;
+transition:0.2s;
 }
 
-.hidden{display:none;}
+button:hover{
+transform:scale(1.03);
+}
 
-.title{
-text-align:center;
-margin-bottom:10px;
+#panel{
+display:none;
 }
 </style>
 </head>
@@ -56,15 +63,15 @@ margin-bottom:10px;
 
 <!-- LOGIN -->
 <div id="loginBox">
-<h2 class="title">Admin Login</h2>
+<h2>Admin Login</h2>
 <input id="pass" type="password" placeholder="Enter password">
 <button onclick="login()">Login</button>
 </div>
 
 <!-- PANEL -->
-<div id="panel" class="hidden">
+<div id="panel">
 
-<h2 class="title">Currency Control</h2>
+<h2>Currency Control</h2>
 
 <input id="syp" placeholder="USD → SYP">
 <input id="try" placeholder="USD → TRY">
@@ -94,22 +101,22 @@ appId: "1:740891153734:web:51e912a46aa35f6a618147"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔐 PASSWORD
 const ADMIN_PASSWORD = "12345";
 
+// 🔐 LOGIN
 window.login = function(){
-let p = document.getElementById("pass").value;
+let pass = document.getElementById("pass").value;
 
-if(p === ADMIN_PASSWORD){
+if(pass === ADMIN_PASSWORD){
 document.getElementById("loginBox").style.display = "none";
-document.getElementById("panel").classList.remove("hidden");
+document.getElementById("panel").style.display = "block";
 loadData();
 }else{
 alert("Wrong password");
 }
 }
 
-// 💾 SAVE DATA
+// 💾 SAVE DATA TO FIREBASE
 window.save = async function(){
 
 await setDoc(doc(db,"settings","rates"),{
@@ -122,7 +129,7 @@ ads:document.getElementById("ads").value
 alert("Saved successfully ✅");
 }
 
-// 📥 LOAD DATA
+// 📥 LOAD DATA FROM FIREBASE
 async function loadData(){
 let snap = await getDoc(doc(db,"settings","rates"));
 
