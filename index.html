@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UMEI Exchange</title>
+<title>محول العملات والذهب</title>
 
 <style>
 body{
@@ -17,7 +17,6 @@ min-height:100vh;
 color:white;
 }
 
-/* CARD */
 .container{
 width:90%;
 max-width:420px;
@@ -29,7 +28,6 @@ border:1px solid rgba(255,255,255,0.15);
 box-shadow:0 20px 50px rgba(0,0,0,0.45);
 }
 
-/* LOGO */
 .logo{
 text-align:center;
 font-size:28px;
@@ -38,7 +36,6 @@ color:#38bdf8;
 margin-bottom:8px;
 }
 
-/* LIVE RATE BOX */
 .rate-box{
 background:rgba(0,0,0,0.25);
 padding:10px;
@@ -47,10 +44,19 @@ text-align:center;
 margin-bottom:12px;
 font-weight:bold;
 color:#facc15;
-box-shadow:0 0 10px rgba(255,255,255,0.1);
 }
 
-/* INPUTS */
+.gold-box{
+background:rgba(0,0,0,0.25);
+padding:10px;
+border-radius:14px;
+text-align:center;
+margin-bottom:12px;
+font-weight:bold;
+color:#f59e0b;
+line-height:1.6;
+}
+
 input,select{
 width:100%;
 padding:14px;
@@ -62,7 +68,6 @@ outline:none;
 background:#f8fafc;
 }
 
-/* BUTTONS */
 button{
 width:100%;
 padding:14px;
@@ -72,22 +77,11 @@ border-radius:22px;
 font-size:16px;
 font-weight:bold;
 cursor:pointer;
-transition:0.3s;
 }
 
-button:hover{transform:scale(1.03);}
+.swap{background:linear-gradient(135deg,#ff6a00,#ff3c5f);color:white;}
+.convert{background:linear-gradient(135deg,#00c853,#009624);color:white;}
 
-.swap{
-background:linear-gradient(135deg,#ff6a00,#ff3c5f);
-color:white;
-}
-
-.convert{
-background:linear-gradient(135deg,#00c853,#009624);
-color:white;
-}
-
-/* RESULT */
 #result{
 margin-top:14px;
 padding:16px;
@@ -98,7 +92,6 @@ font-size:20px;
 font-weight:bold;
 }
 
-/* ADS */
 .ads-container{
 margin-top:16px;
 padding:14px;
@@ -128,33 +121,36 @@ font-weight:bold;
 
 <div class="container">
 
-<div class="logo">💱 UMEI Exchange</div>
+<div class="logo">💱 محول العملات والذهب</div>
 
-<!-- 🔥 سعر الصرف بالأعلى -->
-<div class="rate-box" id="rateBox">Loading rates...</div>
+<!-- العملات -->
+<div class="rate-box" id="rateBox">جاري تحميل أسعار العملات...</div>
+
+<!-- الذهب -->
+<div class="gold-box" id="goldBox">جاري تحميل أسعار الذهب...</div>
 
 <input id="amount" type="number" placeholder="أدخل المبلغ">
 
 <select id="from">
-<option value="USD">دولار</option>
+<option value="USD">دولار أمريكي</option>
 <option value="SYP">ليرة سورية</option>
 <option value="TRY">ليرة تركية</option>
 </select>
 
 <select id="to">
 <option value="SYP">ليرة سورية</option>
-<option value="USD">دولار</option>
+<option value="USD">دولار أمريكي</option>
 <option value="TRY">ليرة تركية</option>
 </select>
 
-<button class="swap" onclick="swap()">تبديل</button>
+<button class="swap" onclick="swap()">تبديل العملات</button>
 <button class="convert" onclick="convert()">تحويل</button>
 
 <div id="result">0.00</div>
 
-<!-- ADS بالأسفل -->
+<!-- الإعلانات -->
 <div class="ads-container">
-<div class="ads-text" id="adsBox">Loading ads...</div>
+<div class="ads-text" id="adsBox">جاري تحميل الإعلانات...</div>
 </div>
 
 </div>
@@ -174,16 +170,7 @@ const db = getFirestore(app);
 
 let rates = { USD:1 };
 
-// 🔥 جلب الإعلانات
-async function loadAds(){
-const snap = await getDoc(doc(db,"settings","rates"));
-if(snap.exists()){
-document.getElementById("adsBox").innerText =
-snap.data().ads || "لا يوجد إعلان";
-}
-}
-
-// 🔥 أسعار حقيقية (API عالمي)
+// العملات
 async function loadRates(){
 try{
 const res = await fetch("https://open.er-api.com/v6/latest/USD");
@@ -195,23 +182,49 @@ SYP:data.rates.SYP,
 TRY:data.rates.TRY
 };
 
-// عرض السعر بالأعلى
 document.getElementById("rateBox").innerText =
-`USD → SYP: ${rates.SYP} | USD → TRY: ${rates.TRY}`;
+`سعر الدولار مقابل الليرة السورية: ${rates.SYP} | سعر الدولار مقابل الليرة التركية: ${rates.TRY}`;
 
 }catch(e){
 document.getElementById("rateBox").innerText =
-"فشل تحميل أسعار الصرف";
+"فشل تحميل أسعار العملات";
 }
 }
 
+// الذهب
+async function loadGold(){
+try{
+const res = await fetch("https://api.gold-api.com/price/XAU");
+const data = await res.json();
+
+let price = data.price || 0;
+
+document.getElementById("goldBox").innerText =
+`سعر الذهب العالمي: $${price} للأونصة`;
+
+}catch(e){
+document.getElementById("goldBox").innerText =
+"فشل تحميل أسعار الذهب";
+}
+}
+
+// الإعلانات
+async function loadAds(){
+const snap = await getDoc(doc(db,"settings","rates"));
+if(snap.exists()){
+document.getElementById("adsBox").innerText =
+snap.data().ads || "لا توجد إعلانات حالياً";
+}
+}
+
+// التحويل
 window.convert = function(){
 let amount = Number(document.getElementById("amount").value);
 let from = document.getElementById("from").value;
 let to = document.getElementById("to").value;
 
 if(!amount){
-alert("أدخل المبلغ");
+alert("يرجى إدخال المبلغ");
 return;
 }
 
@@ -222,19 +235,23 @@ document.getElementById("result").innerText =
 result.toFixed(2) + " " + to;
 }
 
+// التبديل
 window.swap = function(){
 let f = document.getElementById("from");
 let t = document.getElementById("to");
 [f.value,t.value]=[t.value,f.value];
 }
 
+// تشغيل
 async function init(){
 await loadRates();
+await loadGold();
 await loadAds();
 }
 
 init();
 setInterval(loadRates,60000);
+setInterval(loadGold,60000);
 setInterval(loadAds,5000);
 </script>
 
