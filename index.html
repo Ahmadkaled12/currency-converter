@@ -1,1 +1,101 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محول العملات</title>
+
+<style>
+body{
+font-family:Tahoma;
+background:#0f172a;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+color:white;
+}
+
+.container{
+background:#1e293b;
+padding:25px;
+border-radius:15px;
+width:350px;
+text-align:center;
+}
+
+input,select,button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+}
+
+button{
+background:#22c55e;
+color:white;
+font-size:16px;
+}
+
+#result{
+margin-top:15px;
+font-size:20px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>💱 محول العملات</h2>
+
+<input type="number" id="amount" placeholder="أدخل المبلغ">
+
+<select id="from">
+<option value="SYP">ليرة سورية</option>
+<option value="USD">دولار أمريكي</option>
+<option value="TRY">ليرة تركية</option>
+</select>
+
+<select id="to">
+<option value="USD">دولار أمريكي</option>
+<option value="TRY">ليرة تركية</option>
+<option value="SYP">ليرة سورية</option>
+</select>
+
+<button onclick="convert()">تحويل</button>
+
+<div id="result"></div>
+</div>
+
+<script>
+const rates = {
+USD: 1,
+SYP: 14500,
+TRY: 40
+};
+
+function convert(){
+let amount = parseFloat(document.getElementById("amount").value);
+let from = document.getElementById("from").value;
+let to = document.getElementById("to").value;
+
+if(isNaN(amount)){
+alert("أدخل مبلغاً صحيحاً");
+return;
+}
+
+let usd = amount / rates[from];
+let result = usd * rates[to];
+
+document.getElementById("result").innerHTML =
+result.toLocaleString() + " " + to;
+}
+</script>
+
+</body>
+</html>
